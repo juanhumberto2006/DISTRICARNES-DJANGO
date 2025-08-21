@@ -1,1 +1,84 @@
-Aqui se llevara el control del proyecto completo
+Aqui estaran todos los comandos para trabajar con git gub
+
+##############################################
+# 1. CONFIGURACIÓN INICIAL (SOLO EL ADMIN)
+##############################################
+
+# Iniciar repositorio en el proyecto
+git init
+
+# Conectar con GitHub
+git remote add origin https://github.com/juanhumberto2006/DISTRICARNES-DJANGO.git
+
+# Crear la rama principal
+git branch -M main
+
+# Agregar todos los archivos del proyecto
+git add -A
+
+# Crear commit inicial
+git commit -m "Proyecto base de DISTRICARNES-DJANGO"
+
+# Subir el proyecto a GitHub
+git push -u origin main
+
+
+##############################################
+# 2. CREAR RAMAS PARA CADA INTEGRANTE (ADMIN)
+##############################################
+
+git branch jaider
+git branch jairo
+git branch humberto
+git branch diego
+git branch francisco
+
+# Subir ramas a GitHub
+git push origin jaider
+git push origin jairo
+git push origin humberto
+git push origin diego
+git push origin francisco
+
+
+##############################################
+# 3. CLONAR EL PROYECTO (CADA INTEGRANTE)
+##############################################
+
+# Clonar repositorio (solo la primera vez)
+git clone https://github.com/juanhumberto2006/DISTRICARNES-DJANGO.git
+
+# Entrar a la carpeta
+cd DISTRICARNES-DJANGO
+
+# Cambiarse a su rama correspondiente
+# (Ejemplo: Jaider)
+git checkout jaider
+
+
+##############################################
+# 4. FLUJO DE TRABAJO DIARIO (TODOS)
+##############################################
+
+# Actualizar la rama antes de trabajar
+git pull origin NOMBRE_DE_MI_RAMA
+
+# Agregar los cambios realizados
+git add -A
+
+# Crear commit con descripción
+git commit -m "Descripción breve de lo que hice"
+
+# Subir cambios a mi rama
+git push origin NOMBRE_DE_MI_RAMA
+
+
+##############################################
+# 5. INTEGRAR A MAIN (CUANDO TODOS TERMINEN)
+##############################################
+
+# Esto se hace en GitHub:
+# - Ir al repositorio
+# - Crear Pull Request desde la rama de cada integrante hacia main
+# - Revisar y aprobar
+# - Hacer Merge a main
