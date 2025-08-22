@@ -1,0 +1,205 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap');
+
+  /* Reset and base */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background-color: #000000;
+    color: white;
+    font-family: 'Roboto Slab', serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .container {
+    display: flex;
+    gap: 100px;
+    max-width: 1300px;
+    width: 100%;
+    padding: 10px;
+    align-items: center;
+  }
+
+  .logo-section {
+    flex: 1;
+    text-align: center;
+  }
+  .logo-section img {
+    max-width: 90%;
+    height: auto;
+    max-height: 270px;
+    object-fit: contain;
+    
+  }
+  .logo-section .logo-text {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #b81111;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+
+  form {
+    flex: 1;
+    max-width: 550px;
+  }
+
+  /* Grid layout for inputs */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px 30px;
+  }
+
+  /* Label styling */
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 16px;
+  }
+
+  /* Inputs styling */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    background: #8a8a8a;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 35px 10px 20px;
+    width: 100%;
+    color: #1a1a1a;
+    font-family: 'Roboto Slab', serif;
+    font-size: 15px;
+    outline-offset: 2px;
+    outline-color: transparent;
+    transition: outline-color 0.2s ease;
+  }
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder,
+  input[type="password"]::placeholder {
+    color: #dcdcdc;
+  }
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus {
+    outline-color: #b81111;
+  }
+
+  /* Full width confirm email */
+  .input-confirm {
+    grid-column: 1 / 3;
+    position: relative;
+  }
+
+  /* Password inputs container for icon */
+  .input-password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Eye icon */
+  .toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    fill: #1a1a1a;
+    width: 22px;
+    height: 22px;
+    user-select: none;
+  }
+
+  /* Checkbox and label wrapper */
+  .term-accept {
+    display: flex;
+    align-items: center;
+    margin: 25px 0 30px 0;
+    gap: 12px;
+    font-size: 18px;
+    user-select: none;
+  }
+
+  /* Custom green checkmark */
+  .checkbox-custom {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: 2px solid #198a00;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .checkbox-custom svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    fill: #198a00;
+    display: none;
+  }
+  input[type="checkbox"]:checked + .checkbox-custom svg {
+    display: block;
+  }
+  /* Hide native checkbox */
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Submit button */
+  button[type="submit"] {
+    width: 100%;
+    padding: 14px 12px;
+    background-color: #b81111;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: 'Roboto Slab', serif;
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.09em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button[type="submit"]:hover {
+    background-color: #8a0f0f;
+  }
+
+  /* Responsive */
+  @media (max-width: 860px) {
+    .container {
+      flex-direction: column;
+      gap: 50px;
+      padding: 10px 0 20px 0;
+    }
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+    .input-confirm {
+      grid-column: 1 / 2;
+    }
+    form {
+      max-width: 100%;
+    }
+  }
+    @media (max-width: 600px) {
+        .logo-section img {
+        max-height: 200px;
+        }
+        .logo-section .logo-text {
+        font-size: 16px;
+        }
+        button[type="submit"] {
+        font-size: 18px;
+        padding: 12px 10px;
+        }
+    }

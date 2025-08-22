@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DISTRICARNES - Register</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/LOGO-DISTRICARNES.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section" aria-label="Logo DistriCarnes Hermanos Navarro">
+            <img src="{% static 'images/LOGO-DISTRICARNES.png' %}" 
+                alt="Logo blanco y rojo de DistriCarnes Hermanos Navarro, mostrando cabeza de vaca estilizada y texto en tipografía cursiva y letras rojas sobre fondo negro" 
+            />
+        </div>
+        <form method="POST" id="registerForm" aria-label="Formulario de registro DistriCarnes Hermanos Navarro">
+            {% csrf_token %}
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="{{ form.first_name.id_for_label }}">Nombre *</label>
+                    {{ form.first_name }}
+                    <span class="error-message" id="firstNameError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.last_name.id_for_label }}">Apellido *</label>
+                    {{ form.last_name }}
+                    <span class="error-message" id="lastNameError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Correo *</label>
+                    {{ form.email }}
+                    <span class="error-message" id="emailError"></span>
+                </div>
+                <div class="form-group input-password-container">
+                    <label for="{{ form.password1.id_for_label }}">Contraseña *</label>
+                    {{ form.password1 }}
+                    <svg class="toggle-password" tabindex="0" aria-label="Mostrar o ocultar contraseña" role="button" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+                        <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                    </svg>
+                    <span class="error-message" id="password1Error"></span>
+                </div>
+                <div class="form-group input-confirm">
+                    <label for="{{ form.password2.id_for_label }}">Confirmar contraseña *</label>
+                    <div class="input-password-container">
+                        {{ form.password2 }}
+                        <svg class="toggle-password" tabindex="0" aria-label="Mostrar o ocultar confirmar correo" role="button" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 5c-7 0-9 7-9 7s2 7 9 7 9-7 9-7-2-7-9-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/>
+                            <path d="M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+                        </svg>
+                    </div>
+                    <span class="error-message" id="password2Error"></span>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">Dirección *</label>
+                    {{ form.address }}
+                    <span class="error-message" id="addressError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Teléfono *</label>
+                    {{ form.phone }}
+                    <span class="error-message" id="phoneError"></span>
+                </div>
+            </div>
+
+            <div class="term-accept">
+                {{ form.terms }}
+                <label class="checkbox-custom" for="{{ form.terms.id_for_label }}" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" focusable="false" aria-hidden="true">
+                        <path d="M21 7L9 19l-5-5" stroke="#198a00" stroke-width="3" fill="none" />
+                    </svg>
+                </label>
+                <label for="{{ form.terms.id_for_label }}">Aceptar términos y condiciones *</label>
+                <span class="error-message" id="termsError"></span>
+            </div>
+
+            <button type="submit" aria-label="Registrarse en DistriCarnes Hermanos Navarro">REGÍSTRATE</button>
+        </form>
+        
+    </div>
+
+    <script>
+        document.querySelectorAll('.toggle-password').forEach((el) => {
+            el.addEventListener('click', () => {
+                let input = el.parentElement.querySelector('input');
+                if (input) {
+                    input.type = input.type === 'password' ? 'text' : 'password';
+                }
+            });
+            
+            el.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    el.click();
+                }
+            });
+        });
+
+        const form = document.getElementById('registerForm');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                const formData = new FormData(this);
+                
+                try {
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                        }
+                    });
+
+                    if (response.ok) {
+                        window.location.href = '/login/'; // Redirect to login page on success
+                    } else {
+                        const data = await response.json();
+                        // Handle server-side validation errors
+                        Object.keys(data).forEach(key => {
+                            const errorElement = document.getElementById(`${key}Error`);
+                            if (errorElement) {
+                                errorElement.textContent = data[key][0];
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Hubo un error al procesar el registro. Por favor, intente nuevamente.');
+                }
+            }
+        });
+
+        function validateForm() {
+            let isValid = true;
+            
+            document.querySelectorAll('.error-message').forEach(error => error.textContent = '');
+
+            const firstName = document.querySelector('#{{ form.first_name.id_for_label }}');
+            if (!firstName.value.trim()) {
+                document.getElementById('firstNameError').textContent = 'El nombre es requerido';
+                isValid = false;
+            }
+
+            const lastName = document.querySelector('#{{ form.last_name.id_for_label }}');
+            if (!lastName.value.trim()) {
+                document.getElementById('lastNameError').textContent = 'El apellido es requerido';
+                isValid = false;
+            }
+
+            const email = document.querySelector('#{{ form.email.id_for_label }}');
+            if (!email.value.trim()) {
+                document.getElementById('emailError').textContent = 'El correo es requerido';
+                isValid = false;
+            } else if (!isValidEmail(email.value)) {
+                document.getElementById('emailError').textContent = 'Ingrese un correo válido';
+                isValid = false;
+            }
+
+            const password1 = document.querySelector('#{{ form.password1.id_for_label }}');
+            const password2 = document.querySelector('#{{ form.password2.id_for_label }}');
+            if (!password1.value) {
+                document.getElementById('password1Error').textContent = 'La contraseña es requerida';
+                isValid = false;
+            } else if (password1.value.length < 8) {
+                document.getElementById('password1Error').textContent = 'La contraseña debe tener al menos 8 caracteres';
+                isValid = false;
+            }
+
+            if (!password2.value) {
+                document.getElementById('password2Error').textContent = 'Debe confirmar la contraseña';
+                isValid = false;
+            } else if (password1.value !== password2.value) {
+                document.getElementById('password2Error').textContent = 'Las contraseñas no coinciden';
+                isValid = false;
+            }
+
+            const address = document.querySelector('#{{ form.address.id_for_label }}');
+            if (!address.value.trim()) {
+                document.getElementById('addressError').textContent = 'La dirección es requerida';
+                isValid = false;
+            }
+
+            const phone = document.querySelector('#{{ form.phone.id_for_label }}');
+            if (!phone.value.trim()) {
+                document.getElementById('phoneError').textContent = 'El teléfono es requerido';
+                isValid = false;
+            } else if (!isValidPhone(phone.value)) {
+                document.getElementById('phoneError').textContent = 'Ingrese un número de teléfono válido';
+                isValid = false;
+            }
+
+            const terms = document.querySelector('#{{ form.terms.id_for_label }}');
+            if (!terms.checked) {
+                document.getElementById('termsError').textContent = 'Debe aceptar los términos y condiciones';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function isValidPhone(phone) {
+            return /^\d{10}$/.test(phone.replace(/\D/g, ''));
+        }
+    </script>
+</body>
+</html>

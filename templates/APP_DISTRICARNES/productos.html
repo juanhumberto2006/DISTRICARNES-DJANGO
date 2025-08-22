@@ -1,0 +1,734 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Welcome message script -->
+    <script>
+        window.onload = function() {
+            Swal.fire({
+                title: '¡Bienvenido a Districarnes!',
+                text: 'Encuentra los mejores productos cárnicos',
+                icon: 'success',
+                confirmButtonText: 'Comenzar',
+                confirmButtonColor: '#dc2626',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        }
+    </script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISTRICARNES - Productos</title>
+    <link rel="shortcut icon" href="{% static 'images/LOGO-DISTRICARNES.ico' %}" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/ef9a692198.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link rel="shortcut icon" href="{% static 'images/LOGO-DISTRICARNES.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/productos.css' %}">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="{% static 'images/LOGO-DISTRICARNES.png' %}" alt="DISTRICARNES Logo">
+            </div>
+            
+            <nav class="nav-menu" id="navMenu">
+                <a href="{% url 'index' %}">Inicio</a>
+                <a href="{% url 'productos' %}" class="active">Productos</a>
+                <a href="{% url 'promociones' %}">Promociones</a>
+                <a href="{% url 'contacto' %}">Contacto</a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}">
+                        <button class="bg-red-700 hover:bg-red-800 transition text-white text-sm font-semibold px-4 py-2 rounded">ACCESO</button>
+                    </a>
+                    <a href="{% url 'register' %}">
+                        <button class="bg-red-700 hover:bg-red-800 transition text-white text-sm font-semibold px-4 py-2 rounded">
+                            REGISTRO
+                        </button>
+                    </a>
+                {% else %}
+<div class="relative">
+  <button id="userMenuBtn" class="flex items-center space-x-2">
+    <img src="{% static 'images/default-avatar.png' %}" alt="Profile" class="w-8 h-8 rounded-full">
+    <span class="text-sm">Bienvenido, {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}</span>
+    <i class="fas fa-chevron-down ml-1"></i>
+  </button>
+
+  <div id="userMenu" class="hidden absolute right-0 mt-3 w-64 bg-gradient-to-b from-gray-900 to-black rounded-2xl shadow-2xl py-3 z-50 border-2 border-red-700">
+    <div class="px-6 py-3 border-b border-red-800/30">
+      <p class="text-sm font-medium text-red-500">Menu de Usuario</p>
+    </div>
+    
+    <div class="py-2 space-y-1">
+      <a href="{% url 'profile' %}" class="flex items-center mx-3 px-4 py-3.5 text-sm text-gray-200 hover:bg-red-800/20 rounded-xl transition-all duration-300 group">
+        <i class="fas fa-user mr-4 text-lg text-red-600 group-hover:text-red-400"></i> Mi Perfil
+      </a>
+      <a href="{% url 'edit_profile' %}" class="flex items-center mx-3 px-4 py-3.5 text-sm text-gray-200 hover:bg-red-800/20 rounded-xl transition-all duration-300 group">
+        <i class="fas fa-edit mr-4 text-lg text-red-600 group-hover:text-red-400"></i> Editar Perfil
+      </a>
+      <a href="{% url 'settings' %}" class="flex items-center mx-3 px-4 py-3.5 text-sm text-gray-200 hover:bg-red-800/20 rounded-xl transition-all duration-300 group">
+        <i class="fas fa-cog mr-4 text-lg text-red-600 group-hover:text-red-400"></i> Configuración
+      </a>
+      <a href="{% url 'change_password' %}" class="flex items-center mx-3 px-4 py-3.5 text-sm text-gray-200 hover:bg-red-800/20 rounded-xl transition-all duration-300 group">
+        <i class="fas fa-key mr-4 text-lg text-red-600 group-hover:text-red-400"></i> Cambiar Contraseña
+      </a>
+    </div>
+
+    <div class="border-t border-red-800/30 mt-2">
+      <a href="{% url 'logout' %}" onclick="handleLogout(event)" class="flex items-center mx-3 px-4 py-3.5 mt-2 text-sm text-red-500 hover:bg-red-800/20 rounded-xl transition-all duration-300 group">
+        <i class="fas fa-sign-out-alt mr-4 text-lg group-hover:text-red-400"></i> Cerrar Sesión
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+.user-menu-active {
+  display: block !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userMenuBtn = document.getElementById('userMenuBtn');
+  const userMenu = document.getElementById('userMenu');
+
+  userMenuBtn.addEventListener('click', function() {
+    userMenu.classList.toggle('user-menu-active');
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!userMenuBtn.contains(event.target) && !userMenu.contains(event.target)) {
+      userMenu.classList.remove('user-menu-active');
+    }
+  });
+});
+</script>
+                    
+<script>
+function handleLogout(e) {
+    e.preventDefault();
+    
+    // Create and show confirmation modal
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); 
+                    display: flex; align-items: center; justify-content: center; z-index: 9999;">
+            <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; 
+                        max-width: 400px; width: 90%;">
+                <h3 style="margin-bottom: 15px; color: #333;">¿Estás seguro que deseas cerrar sesión?</h3>
+                <div style="display: flex; justify-content: center; gap: 10px;">
+                    <button onclick="confirmLogout()" 
+                            style="background: #dc2626; color: white; padding: 8px 16px; border: none; 
+                                   border-radius: 4px; cursor: pointer;">
+                        Sí, cerrar sesión
+                    </button>
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                            style="background: #gray; color: #333; padding: 8px 16px; border: 1px solid #ccc;
+                                   border-radius: 4px; cursor: pointer;">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function confirmLogout() {
+    // Show success message
+    const message = document.createElement('div');
+    message.innerHTML = `
+        <div style="position: fixed; top: 20px; right: 20px; background: #22c55e; color: white;
+                    padding: 15px; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                    z-index: 9999; animation: slideIn 0.3s ease-out;">
+            ¡Sesión cerrada exitosamente! Redirigiendo...
+        </div>
+    `;
+    document.body.appendChild(message);
+
+    // Add animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Redirect after delay
+    setTimeout(() => {
+        window.location.href = "{% url 'logout' %}";
+    }, 1500);
+}
+</script>
+                       
+                {% endif %}
+            </nav>
+            
+            
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Controls Section -->
+        <section class="controls-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Buscar productos..." id="searchInput">
+                </div>
+            </div>
+            
+            <button class="cart-button" onclick="toggleCart()" aria-label="Abrir carrito">
+                <i class="fas fa-shopping-cart"></i>
+                Carrito
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </section>
+
+        <!-- Category Filter -->
+        <section class="category-filter">
+            <button class="category-btn active" data-category="all">Todos</button>
+            <button class="category-btn" data-category="res">Carne de Res</button>
+            <button class="category-btn" data-category="cerdo">Carne de Cerdo</button>
+            <button class="category-btn" data-category="pollo">Carne de Pollo</button>
+            <button class="category-btn" data-category="cordero">Carne de Cordero</button>
+            <button class="category-btn" data-category="pavo">Carne de Pavo</button>
+            <button class="category-btn" data-category="pescado">Pescados y Mariscos</button>
+        </section>
+
+        <!-- Products Section -->
+        <section class="products-section">
+            <h2>Nuestros Productos</h2>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-content">
+            <div class="cart-header">
+                <h2 class="cart-title">🛒 Tu Carrito</h2>
+                <button class="close-cart" onclick="toggleCart()" aria-label="Cerrar carrito">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be loaded here -->
+            </div>
+            
+            <div class="cart-total" id="cartTotal">
+                <h3>Total: $0</h3>
+            </div>
+            
+            <button class="checkout-btn" onclick="checkout()">
+                <i class="fas fa-credit-card"></i>
+                Proceder al Pago
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Product Data
+        const products = [
+            {
+                id: 1,
+                name: "Lomo Fino de Res",
+                category: "res",
+                price: 25000,
+                image: "../static/images/lomo fresco.jpg",
+                description: "Corte premium de lomo fino, perfecto para asados especiales",
+                badge: "Premium"
+            },
+            {
+                id: 2,
+                name: "Costilla de Res BBQ",
+                category: "res",
+                price: 18000,
+                image: "../static/images/carne a a bbq.jpg",
+                description: "Costilla de res ideal para barbacoa, jugosa y sabrosa",
+                badge: "BBQ"
+            },
+            {
+                id: 3,
+                name: "Chuleta de Cerdo",
+                category: "cerdo",
+                price: 15000,
+                image: "../static/images/chuleta de cerdo.jpg",
+                description: "Chuletas de cerdo frescas, perfectas para la plancha",
+                badge: "Fresco"
+            },
+            {
+                id: 4,
+                name: "Lomo de Cerdo Marinado",
+                category: "cerdo",
+                price: 20000,
+                image: "../static/images/lomo_de_cerdo.jpeg",
+                description: "Lomo de cerdo marinado, perfecto para asados y sopas",
+                badge: "Fresco"
+            },
+            {
+                id: 12,
+                name: "Filete de Robalo",
+                category: "pescado",
+                price: 26000,
+                image: "../static/images/filete_de_robalo.jpg",
+                description: "Filete de robalo fresco, carne blanca y delicada",
+                badge: "Delicado"
+            }
+        ];
+
+        // Cart Management
+        let cart = [];
+        let currentFilter = 'all';
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            renderProducts();
+            updateCartCount();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Mobile menu toggle
+            document.getElementById('mobileToggle').addEventListener('click', function() {
+                const navMenu = document.getElementById('navMenu');
+                navMenu.classList.toggle('active');
+                
+                const icon = this.querySelector('i');
+                if (navMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+
+            // Search functionality
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            
+            // Category filter
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.category;
+                    renderProducts();
+                });
+            });
+
+            // Close cart modal when clicking outside
+            document.getElementById('cartModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    toggleCart();
+                }
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('cartModal');
+                    if (modal.style.display === 'block') {
+                        toggleCart();
+                    }
+                }
+            });
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('productsGrid');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredProducts = products.filter(product => {
+                const matchesCategory = currentFilter === 'all' || product.category === currentFilter;
+                const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
+                                    product.description.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredProducts.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--light-text-color);">
+                        <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary-color);"></i>
+                        <h3>No se encontraron productos</h3>
+                        <p>Intenta con otros términos de búsqueda o categoría</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredProducts.map((product, index) => `
+                <div class="product-card" data-category="${product.category}" style="animation-delay: ${index * 0.1}s;">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy" 
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 300 200\\'><rect fill=\\'%23333\\' width=\\'300\\' height=\\'200\\'/><text x=\\'150\\' y=\\'100\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'16\\'>🍖 ${product.name}</text></svg>'">
+                        <div class="product-badge">${product.badge}</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">${product.price.toLocaleString()}</div>
+                        <div class="product-actions">
+                            <div class="quantity-selector">
+                                <button class="quantity-btn" onclick="changeQuantity(${product.id}, -1)" aria-label="Disminuir cantidad">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="quantity-display" id="qty-${product.id}">1</span>
+                                <button class="quantity-btn" onclick="changeQuantity(${product.id}, 1)" aria-label="Aumentar cantidad">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.id})" aria-label="Agregar ${product.name} al carrito">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Reset quantities display
+            products.forEach(product => {
+                const qtyElement = document.getElementById(`qty-${product.id}`);
+                if (qtyElement) qtyElement.textContent = '1';
+            });
+        }
+
+        function handleSearch() {
+            renderProducts();
+        }
+
+        function changeQuantity(productId, change) {
+            const qtyElement = document.getElementById(`qty-${productId}`);
+            if (!qtyElement) return;
+            
+            let currentQty = parseInt(qtyElement.textContent);
+            let newQty = Math.max(1, Math.min(99, currentQty + change)); // Límite entre 1 y 99
+            qtyElement.textContent = newQty;
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const qtyElement = document.getElementById(`qty-${productId}`);
+            
+            if (!product || !qtyElement) return;
+
+            const quantity = parseInt(qtyElement.textContent);
+            const button = document.querySelector(`[onclick="addToCart(${productId})"]`);
+            const originalContent = button.innerHTML;
+            
+            // Animation: Loading state
+            button.innerHTML = '<div class="loading-spinner"></div>';
+            button.disabled = true;
+
+            setTimeout(() => {
+                // Find existing item in cart
+                const existingItem = cart.find(item => item.id === productId);
+                
+                if (existingItem) {
+                    existingItem.quantity += quantity;
+                } else {
+                    cart.push({
+                        ...product,
+                        quantity: quantity
+                    });
+                }
+
+                // Update UI
+                updateCartCount();
+                
+                // Animation: Success state
+                button.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
+                button.classList.add('success');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                    button.classList.remove('success');
+                    
+                    // Reset quantity display
+                    qtyElement.textContent = '1';
+                }, 1500);
+            }, 800);
+        }
+
+        function updateCartCount() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const countElement = document.getElementById('cartCount');
+            countElement.textContent = totalItems;
+            
+            // Animation for cart count
+            if (totalItems > 0) {
+                countElement.style.transform = 'scale(1.2)';
+                setTimeout(() => {
+                    countElement.style.transform = 'scale(1)';
+                }, 200);
+            }
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            const isVisible = modal.style.display === 'block';
+            
+            if (isVisible) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            } else {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                renderCartItems();
+            }
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItems');
+            const totalContainer = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Tu carrito está vacío</h3>
+                        <p>¡Agrega algunos productos deliciosos!</p>
+                    </div>
+                `;
+                totalContainer.innerHTML = '<h3>Total: $0</h3>';
+                return;
+            }
+
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" 
+                         onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 60 60\\'><rect fill=\\'%23333\\' width=\\'60\\' height=\\'60\\'/><text x=\\'30\\' y=\\'35\\' text-anchor=\\'middle\\' fill=\\'white\\' font-size=\\'24\\'>🍖</text></svg>'">
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-price">${item.price.toLocaleString()}</div>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <button class="quantity-btn" onclick="updateCartItemQuantity(${item.id}, -1)" aria-label="Disminuir cantidad">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="quantity-display">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateCartItemQuantity(${item.id}, 1)" aria-label="Aumentar cantidad">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <button class="quantity-btn" onclick="removeFromCart(${item.id})" 
+                            style="background: linear-gradient(135deg, #dc3545, #c82333); color: white;" 
+                            aria-label="Eliminar ${item.name} del carrito">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `).join('');
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            totalContainer.innerHTML = `
+                <h3>Total: ${total.toLocaleString()}</h3>
+                <p style="color: var(--light-text-color); font-size: 0.9rem; margin-top: 0.5rem;">
+                    ${itemCount} producto${itemCount !== 1 ? 's' : ''} en tu carrito
+                </p>
+            `;
+        }
+
+        function updateCartItemQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+
+            item.quantity = Math.max(1, Math.min(99, item.quantity + change));
+            
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            renderCartItems();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Tu carrito está vacío');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            const orderSummary = cart.map(item => 
+                `• ${item.name} x${item.quantity} - ${(item.price * item.quantity).toLocaleString()}`
+            ).join('\n');
+
+            const whatsappMessage = encodeURIComponent(
+                `🍖 *PEDIDO DISTRICARNES* 🍖\n\n${orderSummary}\n\n💰 *Total: ${total.toLocaleString()}*\n📦 *Productos: ${itemCount}*\n\n¡Gracias por elegirnos! 🙌`
+            );
+
+            const checkoutBtn = document.querySelector('.checkout-btn');
+            const originalText = checkoutBtn.innerHTML;
+            
+            checkoutBtn.innerHTML = '<div class="loading-spinner"></div> Procesando pedido...';
+            checkoutBtn.disabled = true;
+
+            setTimeout(() => {
+                // Open WhatsApp with order details
+                window.open(`https://wa.me/573001234567?text=${whatsappMessage}`, '_blank');
+                
+                // Clear cart
+                cart = [];
+                updateCartCount();
+                
+                // Close modal
+                toggleCart();
+                
+                // Reset button
+                checkoutBtn.innerHTML = originalText;
+                checkoutBtn.disabled = false;
+                
+                // Show success message
+                showNotification('¡Pedido enviado! Te contactaremos pronto por WhatsApp.', 'success');
+            }, 2000);
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'linear-gradient(135deg, #28a745, #20c997)' : 'var(--gradient-primary)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+                z-index: 3000;
+                font-weight: 600;
+                max-width: 300px;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(400px)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            // Add loading animation to products
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+    <script>
+        // Additional products for demo purposes
+        const additionalProducts = [
+            {
+                id: 5,
+                name: "Pechuga de Pollo",
+                category: "pollo",
+                price: 12000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23FFE4B5' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='%23333' font-size='16'>🐔 Pechuga</text></svg>",
+                description: "Pechuga de pollo sin hueso, ideal para dietas saludables",
+                badge: "Saludable"
+            },
+            {
+                id: 6,
+                name: "Muslos de Pollo",
+                category: "pollo",
+                price: 8000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23F0E68C' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='%23333' font-size='16'>🍗 Muslos</text></svg>",
+                description: "Muslos de pollo jugosos, perfectos para guisos y sopas",
+                badge: "Económico"
+            },
+            {
+                id: 7,
+                name: "Pierna de Cordero",
+                category: "cordero",
+                price: 35000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23696969' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='white' font-size='16'>🍖 Pierna Cordero</text></svg>",
+                description: "Pierna de cordero tierna, ideal para ocasiones especiales",
+                badge: "Gourmet"
+            },
+            {
+                id: 8,
+                name: "Costillas de Cordero",
+                category: "cordero",
+                price: 40000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23708090' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='white' font-size='16'>🥩 Costillas Cordero</text></svg>",
+                description: "Costillas de cordero premium, perfectas para asados gourmet",
+                badge: "Premium"
+            },
+            {
+                id: 9,
+                name: "Pechuga de Pavo",
+                category: "pavo",
+                price: 22000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23F5DEB3' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='%23333' font-size='16'>🦃 Pechuga Pavo</text></svg>",
+                description: "Pechuga de pavo fresca, perfecta para celebraciones",
+                badge: "Festivo"
+            },
+            {
+                id: 10,
+                name: "Salmón Fresco",
+                category: "pescado",
+                price: 30000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23FFA07A' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='white' font-size='16'>🐟 Salmón</text></svg>",
+                description: "Salmón del Atlántico fresco, rico en omega 3",
+                badge: "Omega 3"
+            },
+            {
+                id: 11,
+                name: "Camarones Tigre",
+                category: "pescado",
+                price: 28000,
+                image: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'><rect fill='%23FF6347' width='300' height='200'/><text x='150' y='100' text-anchor='middle' fill='white' font-size='16'>🦐 Camarones</text></svg>",
+                description: "Camarones tigre frescos, ideales para cócteles y ceviches",
+                badge: "Fresco"
+            }
+        ];  
+</script>
+</body>
+</html>

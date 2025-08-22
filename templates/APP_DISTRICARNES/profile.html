@@ -1,0 +1,75 @@
+{% extends "APP_DISTRICARNES/base.html" %}
+{% block content %}
+<style>
+  .profile-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .profile-header {
+    color: #dc2626;
+    font-size: 1.875rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #dc2626;
+    padding-bottom: 0.5rem;
+  }
+
+  .profile-field {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+
+  .profile-field:hover {
+    background-color: #f8f9fa;
+    padding-left: 0.5rem;
+  }
+
+  .field-label {
+    font-weight: 600;
+    min-width: 120px;
+    color: #374151;
+  }
+
+  .field-value {
+    color: #4b5563;
+    flex-grow: 1;
+  }
+</style>
+
+<div class="profile-container">
+  <h2 class="profile-header">👤 Mi Perfil</h2>
+  
+  <div class="profile-field">
+    <span class="field-label">Nombre:</span>
+    <span class="field-value">{{ user.first_name }} {{ user.last_name }}</span>
+  </div>
+  
+  <div class="profile-field">
+    <span class="field-label">Usuario:</span>
+    <span class="field-value">{{ user.username }}</span>
+  </div>
+  
+  <div class="profile-field">
+    <span class="field-label">Email:</span>
+    <span class="field-value">{{ user.email }}</span>
+  </div>
+  
+  <div class="profile-field">
+    <span class="field-label">Teléfono:</span>
+    <span class="field-value">{{ user.phone }}</span>
+  </div>
+  
+  <div class="profile-field">
+    <span class="field-label">Dirección:</span>
+    <span class="field-value">{{ user.address }}</span>
+  </div>
+</div>
+{% endblock %}

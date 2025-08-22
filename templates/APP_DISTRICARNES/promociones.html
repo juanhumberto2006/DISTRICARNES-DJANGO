@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>DISTRICARNES - Promociones</title>
+    <link rel="stylesheet" href="{% static 'css/promociones.css' %}">
+    <link rel="shortcut icon" href="{% static '/images/LOGO-DISTRICARNES.ico' %}" type="image/x-icon">
+</head> 
+<body>
+    {% include "APP_DISTRICARNES/partials/promociones.html" %}
+
+    <main class="main-content">
+        <section class="products-section">
+            <h2>🔥 Promociones Especiales 🔥</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{% static 'images/lomo fresco.jpg' %}" alt="Lomo en Oferta">
+                        <div class="product-badge">-20%</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Lomo Fino de Res</h3>
+                        <p class="product-description">¡Solo por esta semana, lleva el mejor corte con 20% de descuento!</p>
+                        <div class="product-price">20,000</div>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="{% static 'images/chuleta de cerdo.jpg' %}" alt="Chuleta Promoción">
+                        <div class="product-badge">Combo</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Chuletas de Cerdo</h3>
+                        <p class="product-description">Compra 2 kilos y recibe 500g GRATIS 🎁</p>
+                        <div class="product-price">15,000</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
